@@ -1,6 +1,9 @@
 package com.bg.Ack;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import scala.util.Random;
@@ -14,6 +17,7 @@ import backtype.storm.topology.TopologyBuilder;
 import backtype.storm.topology.base.BaseRichBolt;
 import backtype.storm.topology.base.BaseRichSpout;
 import backtype.storm.tuple.Fields;
+import backtype.storm.tuple.MessageId;
 import backtype.storm.tuple.Tuple;
 import backtype.storm.tuple.Values;
 import backtype.storm.utils.Utils;
@@ -28,7 +32,11 @@ import backtype.storm.utils.Utils;
 
 public class ClusterStormTopologtAck1 {
 	
-	static AtomicInteger counter = new AtomicInteger(0);//原子操作 不受线程的影响
+	static AtomicInteger counter = new AtomicInteger(-1);//原子操作 不受线程的影响
+//	自身线程安全的map
+	private static ConcurrentHashMap <Integer, Tuple>   fsHashMap = null;
+	static ArrayList arrayList = null;
+	static  HashMap hashMap = null;
 	
 	public static class SourceSpout extends BaseRichSpout{
 		private Map conf;
@@ -41,6 +49,9 @@ public class ClusterStormTopologtAck1 {
 			this.collector = collector;
 			this.conf = conf;
 			this.context = context;
+			fsHashMap = new ConcurrentHashMap <Integer, Tuple>();
+			 arrayList = new ArrayList();
+			  hashMap = new HashMap();
 			
 		}
 		/**
@@ -49,11 +60,14 @@ public class ClusterStormTopologtAck1 {
 		int i = 0;
 		public void nextTuple() {
 
-//			System.err.println("Spout  "+ i);
 			//送出去，送个bolt
 			//Values是一个value的List
-			this.collector.emit(new Values(i%2 ,i++), "hello");
-			Utils.sleep(1000);
+//										   flag v1			msgId
+			this.collector.emit(new Values(i%2 ,i++), counter.incrementAndGet());
+			arrayList.add(counter);
+//			fsHashMap.put(counter.get(), 123);
+//			hashMap.put(new Random().nextInt(10), new Random().nextInt(10));
+			Utils.sleep(500);
 		
 			
 		}
@@ -71,15 +85,17 @@ public class ClusterStormTopologtAck1 {
 		@Override
 		public void ack(Object msgId) {
 			super.ack(msgId);
-			System.out.println("调用了ack "+msgId);
+			System.out.println("调用了ack "+msgId+"hashMap.size()---->"+fsHashMap.size());
+			fsHashMap.remove(msgId);
 		}
 		
 		/**
-		 * 当后继者bolt发送fail时，这里的fail方法会被调用
+		 * 当后继者bolt发送fail时，这里的fail方法会被调用		失败可以进行重发
 		 */
 		@Override
 		public void fail(Object msgId) {
-			super.fail(msgId);
+			
+			collector.emit(new Values(i%2,fsHashMap.get(msgId).getIntegerByField("v1")+100),msgId);
 			System.out.println("调用了fail "+msgId);
 		}
 		
@@ -94,21 +110,22 @@ public class ClusterStormTopologtAck1 {
 			this.conf = conf;
 			this.context = context;
 			this.collector = collector;
+			
+			
 		}
 		
 		/**
 		 * 死循环，用于接收bolt送来的数据
 		 */
 		int sum = 0;
-		public void execute(Tuple tuple) {
-			
-			final Integer value = tuple.getIntegerByField("v1");
 		
+		public void execute(Tuple tuple) {
+			final Integer value = tuple.getIntegerByField("v1");
 			sum += value;
-			System.err.println("线程--->"+Thread.currentThread().getId() + "\t" +  value);
-			
 			if(value>10 && value<20){
+				fsHashMap.put(counter.get(), tuple);
 				this.collector.fail(tuple);
+				
 			}else{
 				this.collector.ack(tuple);
 			}
