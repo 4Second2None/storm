@@ -1,0 +1,6 @@
+eclipse.preferences.version=1
+encoding//src/main/java/com/bg/sla/bolt/CheckOrderBolt.java=UTF-8
+encoding//src/main/java/com/bg/sla/bolt/SaveMysqlBolt.java=UTF-8
+encoding//src/main/java/com/bg/sla/bolt/TranslateBolt.java=UTF-8
+encoding//src/main/java/com/bg/sla/orderTopology.java=UTF-8
+encoding//src/test/java/com/test/SendMessage.java=UTF-8

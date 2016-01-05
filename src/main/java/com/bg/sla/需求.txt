@@ -1,0 +1,28 @@
+SELECT 
+COUNT(id)，  --有效订单量
+SUM(totalPrice), --优惠前金额				--由于这些统计只有一个维度 所以  第三个bolt将结果入库
+SUM(totalPrice-youhui), --优惠后金额
+COUNT(DISTINCT memberid), -- 下单用户数
+CASE WHEN SUBSTRING(sendpay,9,1)="1" THEN 1 WHEN SUBSTRING(sendpay,9,1)="2" THEN 2  ELSE -1 END --手机下单标记
+FROM 
+realtime_orders
+WHERE
+1=1 AND createtime >='2015-11-22'		--检测订单的有效性
+GROUP BY
+CASE WHEN SUBSTRING(sendpay,9,1)="1" THEN 1 WHEN SUBSTRING(sendpay,9,1)="2" THEN 2  ELSE -1 END			--	第二个bolt 根据字段整个数据
+
+1.web端发送数据到kafka --->ORDER
+
+2、storm 从kafka获取数据 进行实时分析
+	a、首先storm和kafka进行整合
+	b、简单需要一个topology 读取订单，打印数据
+	c、通过业务，编写代码
+3、将数据结果入库
+		//订单号       用户id       原金额        优惠价     标示字段    下单时间
+		//id    memberid     totalprice    youhui     sendpay     createdate 
+	
+
+用的的框架：
+	kafka + storm + memcached/redis+mysql+zookpper分布式事务锁
+	
+待完善的问题，redis的数据更新
