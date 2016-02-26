@@ -12,6 +12,16 @@ import java.util.Set;
  * It can be used, for instance, as a building block for implementing sliding window counting of objects.
  *
  * @param <T> The type of those objects we want to count.
+ * storm.starter.tools.SlotBasedCounter<T>
+
+	基于slot的counter, 模板类, 可以指定被计数对象的类型T   
+	这个类其实很简单, 实现计数对象和一组slot(用long数组实现)的map, 并可以对任意slot做increment或reset等操作 
+	
+	关键结构为Map<T, long[]> objToCounts, 为每个obj都对应于一个大小为numSlots的long数组, 所以对每个obj可以计numSlots个数   
+	incrementCount, 递增某个obj的某个slot, 如果是第一次需要创建counts数组   
+	getCount, getCounts, 获取某obj的某slot值, 或某obj的所有slot值的和   
+	wipeSlot, resetSlotCountToZero, reset所有对象的某solt为0, reset某obj的某slot为0   
+	wipeZeros, 删除所有total count为0的obj, 以释放空间
  */
 public final class SlotBasedCounter<T> implements Serializable {
 
