@@ -6,7 +6,13 @@ import com.google.common.collect.Lists;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
-
+/**
+ * 
+ * Description: storm.starter.tools.Rankings  Rankings维护需要排序的List, 并提供对List相应的操作
+ * Copyright:   ©2015 Vbill Payment Co. Ltd. All rights reserved.
+ * Created on:  2016年2月26日 下午8:50:59 
+ * @author bbaiggey
+ */
 public class Rankings implements Serializable {
 
   private static final long serialVersionUID = -1549827195410578903L;
@@ -64,7 +70,13 @@ public class Rankings implements Serializable {
     }
     return ImmutableList.copyOf(copy);
   }
-
+/**
+ * 
+ *核心的数据结构如下, 用来存储rankable对象的list   
+	List<Rankable> rankedItems = Lists.newArrayList();
+	提供一些简单的操作, 比如设置maxsize(list size), getRankings(返回rankedItems, 排序列表)
+	核心的操作是, 
+ */
   public void updateWith(Rankings other) {
     for (Rankable r : other.getRankings()) {
       updateWith(r);
