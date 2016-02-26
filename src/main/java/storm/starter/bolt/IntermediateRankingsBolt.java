@@ -37,8 +37,8 @@ public final class IntermediateRankingsBolt extends AbstractRankerBolt {
 
   @Override
   void updateRankingsWithTuple(Tuple tuple) {
-    Rankable rankable = RankableObjectWithFields.from(tuple);
-    super.getRankings().updateWith(rankable);
+    Rankable rankable = RankableObjectWithFields.from(tuple);//逻辑很简单, 将Tuple转化Rankable, 
+    super.getRankings().updateWith(rankable);//并更新Rankings列表   参考AbstractRankerBolt, 该bolt会定时将Ranking列表emit出去
   }
 
   @Override
