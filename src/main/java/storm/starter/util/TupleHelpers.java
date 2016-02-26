@@ -9,6 +9,8 @@ public final class TupleHelpers {
   }
 
   public static boolean isTickTuple(Tuple tuple) {
+//	    public static final String SYSTEM_COMPONENT_ID = "__system";
+//	    public static final String SYSTEM_TICK_STREAM_ID = "__tick";	  
     return tuple.getSourceComponent().equals(Constants.SYSTEM_COMPONENT_ID) && tuple.getSourceStreamId().equals(
         Constants.SYSTEM_TICK_STREAM_ID);
   }

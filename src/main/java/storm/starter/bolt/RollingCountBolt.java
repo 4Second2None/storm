@@ -86,9 +86,11 @@ public class RollingCountBolt extends BaseRichBolt {
 //	  2. TupleHelpers.isTickTuple(tuple), TickTuple
 //	  前面没有说的一点是, 如何触发emit? 这是比较值得说明的一点, 因为其使用Storm的TickTuple特性.   
 //	  这个功能挺有用, 比如数据库批量存储, 或者这里的时间窗口的统计等应用   
+	  /*"__system" component会定时往task发送 "__tick" stream的tuple   
+	  发送频率由TOPOLOGY_TICK_TUPLE_FREQ_SECS来配置, 可以在default.ymal里面配置   
+	  也可以在代码里面通过getComponentConfiguration()来进行配置,*/
     if (TupleHelpers.isTickTuple(tuple)) {
       LOG.debug("Received tick tuple, triggering emit of current window counts");
-      
       
 //     每3分钟会触发调用emitCurrentWindowCounts, 
       emitCurrentWindowCounts();
