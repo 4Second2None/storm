@@ -58,6 +58,7 @@ public abstract class AbstractRankerBolt extends BaseBasicBolt {
 
   /**
    * This method functions as a template method (design pattern).
+   * 参考AbstractRankerBolt, 该bolt会定时将Ranking列表emit出去
    */
   @Override
   public final void execute(Tuple tuple, BasicOutputCollector collector) {
