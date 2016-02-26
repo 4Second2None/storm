@@ -20,6 +20,14 @@ import java.util.Map;
  * It uses a template method design pattern for {@link AbstractRankerBolt#execute(Tuple, BasicOutputCollector)} to allow
  * actual bolt implementations to specify how incoming tuples are processed, i.e. how the objects embedded within those
  * tuples are retrieved and counted.
+ * storm.starter.bolt.AbstractRankerBolt首先以TopN为参数, 创建Rankings对象
+ * count = topN;
+    this.emitFrequencyInSeconds = emitFrequencyInSeconds;
+    rankings = new Rankings(count);
+ * 在execute中, 也是定时触发emit, 同样是通过emitFrequencyInSeconds来配置tickTuple   
+	一般情况, 只是使用updateRankingsWithTuple不断更新Rankings   
+	这里updateRankingsWithTuple是abstract函数, 需要子类重写具体的update逻辑
+ * 
  */
 public abstract class AbstractRankerBolt extends BaseBasicBolt {
 
@@ -49,6 +57,7 @@ public abstract class AbstractRankerBolt extends BaseBasicBolt {
     }
     count = topN;
     this.emitFrequencyInSeconds = emitFrequencyInSeconds;
+//    首先以TopN为参数, 创建Rankings对象
     rankings = new Rankings(count);
   }
 
