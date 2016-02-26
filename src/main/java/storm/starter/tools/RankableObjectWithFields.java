@@ -11,6 +11,14 @@ import java.util.List;
  * This class wraps an objects and its associated count, including any additional data fields.
  * <p/>
  * This class can be used, for instance, to track the number of occurrences of an object in a Storm topology.
+ * 
+ * RankableObjectWithFields实现Rankable接口   
+	1. 提供将Tuple转化为RankableObject   
+	Tuple由若干field组成, 第一个field作为obj, 第二个field作为count, 其余的都放到List<Object> otherFields中
+	
+	2. 实现Rankable定义的getObject()和getCount()接口
+	
+	3. 实现Comparable接口, 包含compareTo, equals
  */
 public class RankableObjectWithFields implements Rankable, Serializable {
 
@@ -44,6 +52,8 @@ public class RankableObjectWithFields implements Rankable, Serializable {
    * @param tuple
    *
    * @return new instance based on the provided tuple
+   * 提供将Tuple转化为RankableObject   
+	Tuple由若干field组成, 第一个field作为obj, 第二个field作为count, 其余的都放到List<Object> otherFields中
    */
   public static RankableObjectWithFields from(Tuple tuple) {
     List<Object> otherFields = Lists.newArrayList(tuple.getValues());
