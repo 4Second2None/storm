@@ -47,6 +47,16 @@ import java.util.Map;
  * counter was not running before that time.
  *
  * @param <T> The type of those objects we want to count.
+ * 
+ * storm.starter.tools.SlidingWindowCounter<T> SlidingWindowCounter只是对SlotBasedCounter做了进一步的封装, 通过headSlot和tailSlot提供sliding window的概念
+
+	incrementCount, 只能对headSlot进行increment, 其他slot作为窗口中的历史数据
+	
+	核心的操作为, getCountsThenAdvanceWindow   
+	1. 取出Map<T, Long> counts, 对象和窗口内所有slots求和值的map   
+	2. 调用wipeZeros, 删除已经不被使用的obj, 释放空间   
+	3. 最重要的一步, 清除tailSlot, 并advanceHead, 以实现滑动窗口   
+	    advanceHead的实现, 如何在数组实现循环的滑动窗口
  */
 public final class SlidingWindowCounter<T> implements Serializable {
 
@@ -81,6 +91,10 @@ public final class SlidingWindowCounter<T> implements Serializable {
    * objects within the next "chunk" of the sliding window.
    *
    * @return The current (total) counts of all tracked objects.
+   * 1. 取出Map<T, Long> counts, 对象和窗口内所有slots求和值的map   
+	2. 调用wipeZeros, 删除已经不被使用的obj, 释放空间   
+	3. 最重要的一步, 清除tailSlot, 并advanceHead, 以实现滑动窗口   
+	    advanceHead的实现, 如何在数组实现循环的滑动窗口
    */
   public Map<T, Long> getCountsThenAdvanceWindow() {
     Map<T, Long> counts = objCounter.getCounts();

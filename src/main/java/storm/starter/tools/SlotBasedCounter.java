@@ -95,6 +95,7 @@ public final class SlotBasedCounter<T> implements Serializable {
 
   /**
    * Remove any object from the counter whose total count is zero (to free up memory).
+   * 删除所有total count为0的obj, 以释放空间
    */
   public void wipeZeros() {
     Set<T> objToBeRemoved = new HashSet<T>();
