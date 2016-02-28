@@ -1,9 +1,11 @@
-stormµÄÒ»Ğ©¾­µäÊµÏÖ
+stormçš„ä¸€äº›ç»å…¸å®ç°
 1.wc
 2.RPC DRPC
 3.ACK Fail
-4.¼¸ÖÖGrouping
-5.ºì»ÆÀ¶Àı×Ó¡¾²¢ĞĞ¶Èµ÷Õû¡¿
-6.ÄÚ²¿ÏûÏ¢Í¨Ñ¶»úÖÆ
-7.Trident±à³Ì
-8.¶©µ¥ÊµÊ±Ğ£ÑéÏîÄ¿¡¾kafka + storm + memcached/redis+mysql+zookpper·Ö²¼Ê½ÊÂÎñËø¡¿
+4.å‡ ç§Grouping
+5.çº¢é»„è“ä¾‹å­ã€å¹¶è¡Œåº¦è°ƒæ•´ã€‘
+6.å†…éƒ¨æ¶ˆæ¯é€šè®¯æœºåˆ¶
+7.Tridentç¼–ç¨‹
+8.è®¢å•å®æ—¶æ ¡éªŒé¡¹ç›®ã€kafka + storm + memcached/redis+mysql+zookpperåˆ†å¸ƒå¼äº‹åŠ¡é”ã€‘
+
+æ·»åŠ stormçš„starteræ»‘åŠ¨çª—å£è®¡ç®—TopNæºç åˆ†æ
