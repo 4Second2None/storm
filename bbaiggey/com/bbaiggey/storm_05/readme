@@ -1,0 +1,36 @@
+性能问题？
+
+Bolt分拆的依据：
+1、性能考虑
+2、线程安全考虑
+网站最常用的两个指标：
+PV(page views)： count (session_id)
+UV(user  views):    count(distinct session_id)
+
+多线程下，注意线程安全问题
+一、PV统计
+方案分析
+如下是否可行？
+1、定义staticlong pv，Synchronized 控制累计操作
+Synchronized 和 Lock在单JVM下有效，但在多JVM下无效
+
+
+可行的两个方案：
+
+1、shuffleGrouping下，pv* Executer并发数
+2、bolt1进行多并发局部汇总，bolt2单线程进行全局汇总
+
+线程安全：多线程处理的结果和单线程一致
+
+二、UV统计
+方案分析
+如下是否可行？
+1、把session_id放入Set实现自动去重，Set.size() 获得UV
+
+
+可行的方案（类似WordCount的计算去重word总数）：
+bolt1通过fieldGrouping进行多线程局部汇总，下一级blot2进行单线程保存session_id和count数到Map，下一级blot3进行Map遍历，可以得到：
+Pv、UV、访问深度（每个session_id的浏览数）
+
+
+
