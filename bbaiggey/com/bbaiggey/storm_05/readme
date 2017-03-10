@@ -1,3 +1,4 @@
+该内容在stormstart项目中也存在
 性能问题？
 
 Bolt分拆的依据：
@@ -31,6 +32,3 @@ Synchronized 和 Lock在单JVM下有效，但在多JVM下无效
 可行的方案（类似WordCount的计算去重word总数）：
 bolt1通过fieldGrouping进行多线程局部汇总，下一级blot2进行单线程保存session_id和count数到Map，下一级blot3进行Map遍历，可以得到：
 Pv、UV、访问深度（每个session_id的浏览数）
-
-
-
